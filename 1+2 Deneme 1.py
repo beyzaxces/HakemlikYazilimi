@@ -5,8 +5,9 @@ import os
 
 def bilirkisi_raporu():
     doc = Document()
-    doc.add_heading('Bilirkişi Raporu', level=1)
-    doc.add_paragraph(f"Uyuşmazlık Konusu: {uyusmazlik_konusu.get()}\n")
+    doc.add_heading('BİLİRKİŞİ RAPORU', level=1)
+    doc.add_heading('1. BAŞVURUYA KONU UYUŞMAZLIK VE İTİRAZ HAKEM HEYETİNE İNTİKALİ ', level=2)
+    doc.add_heading(f"1.1 Uyuşmazlık Konusu: {uyusmazlik_konusu.get()}\n", level=3)
 
     if uyusmazlik_konusu.get() == "Trafik DK":
         doc.add_paragraph(f"Sigortalı araç plakası: {sigortali_plaka_entry.get()}")
@@ -19,7 +20,7 @@ def bilirkisi_raporu():
                           f"araçta oluşan değer kaybı tutarının tazmini amacıyla Komisyona yapılan başvuruda "
                           f"Uyuşmazlık Hakemince verilen Karara davalı sigorta kuruluşunun itirazlarına ilişkindir.")
 
-    doc.add_paragraph(f"\n\nİnceleme süresi: {intikal_sureci.get()}\n")
+    doc.add_heading(f"\n\n1.2 İnceleme süresi: {intikal_sureci.get()}\n", level=3)
 
     if intikal_sureci.get() == "Doğrudan hüküm":
         doc.add_paragraph("\nUyuşmazlık Hakemi Kararına davalı sigorta kuruluşu vekilinin itirazları Komisyon nezdinde "
@@ -31,8 +32,8 @@ def bilirkisi_raporu():
                           "kurulması yoluna gidilmiştir.\n\nHeyetimizce davalı vekilinin itirazlarına ilişkin olarak "
                           "karara varılmış ve yargılamaya son verilmiştir.")
 
-    doc.add_heading('SİGORTA HAKEMİ VEYA HAKEM HEYETİNCE VERİLEN HÜKÜM', level=1)
-    doc.add_paragraph(f"Uyuşmazlık Hakemi tarafından verilen hüküm: {hukum.get()}")
+    doc.add_heading('2. SİGORTA HAKEMİ VEYA HAKEM HEYETİNCE VERİLEN HÜKÜM', level=2)
+    doc.add_heading(f"Uyuşmazlık Hakemi tarafından verilen hüküm: {hukum.get()}", level=3)
 
     if hukum.get() == "Başvurunun kabulü":
         if not deger_kaybi_entry.get().strip() or not vekalet_ucreti_entry.get().strip():
@@ -57,38 +58,15 @@ def bilirkisi_raporu():
     messagebox.showinfo("İşlem Tamamlandı", f"Bilirkişi raporu oluşturuldu: {dosya_yolu}")
 
 def uyusmazlik_goster():
-    # Uyuşmazlık Konusu seçildiğinde ilgili inputları göster veya gizle
-    if uyusmazlik_konusu.get() == "Trafik DK":
-        sigortali_plaka_label.grid()
-        sigortali_plaka_entry.grid()
-        basvuran_plaka_label.grid()
-        basvuran_plaka_entry.grid()
-        kaza_tarihi_label.grid()
-        kaza_tarihi_entry.grid()
-    else:
-        sigortali_plaka_label.grid_remove()
-        sigortali_plaka_entry.grid_remove()
-        basvuran_plaka_label.grid_remove()
-        basvuran_plaka_entry.grid_remove()
-        kaza_tarihi_label.grid_remove()
-        kaza_tarihi_entry.grid_remove()
+
 
 def hukum_secildi(*args):
-    if hukum.get() == "Başvurunun kabulü":
-        vekalet_ucreti_label.grid(row=17, column=3, sticky=W, padx=10, pady=5)
-        vekalet_ucreti_entry.grid(row=17, column=4, padx=10, pady=5)
-        deger_kaybi_label.grid(row=18, column=3, sticky=W, padx=10, pady=5)
-        deger_kaybi_entry.grid(row=18, column=4, sticky=W, padx=10, pady=5)
-    else:
-        deger_kaybi_label.grid_remove()
-        deger_kaybi_entry.grid_remove()
-        vekalet_ucreti_label.grid_remove()
-        vekalet_ucreti_entry.grid_remove()
+    pass  # No action needed since the fields are always visible
 
 # Ana pencereyi oluştur
 root = Tk()
-root.title("Bilirkişi Raporu ve Sigorta Hakemi veya Hakem Heyeti Hükmü")
-root.geometry("600x900")
+root.title("Bilirkişi Raporu")
+root.geometry("700x800")
 
 # Uyuşmazlık Konusu
 uyusmazlik_konusu = StringVar()
@@ -118,6 +96,16 @@ kaza_tarihi_entry = Entry(root)
 kaza_tarihi_label.grid(row=3, column=3, sticky=W, padx=10, pady=5)
 kaza_tarihi_entry.grid(row=3, column=4, padx=10, pady=5)
 
+# Değer kaybı ve vekalet ücreti için input alanları
+deger_kaybi_label = Label(root, text="Değer Kaybı (TL):")
+deger_kaybi_entry = Entry(root)
+vekalet_ucreti_label = Label(root, text="Vekalet Ücreti (TL):")
+vekalet_ucreti_entry = Entry(root)
+vekalet_ucreti_label.grid(row=17, column=3, sticky=W, padx=10, pady=5)
+vekalet_ucreti_entry.grid(row=17, column=4, padx=10, pady=5)
+deger_kaybi_label.grid(row=18, column=3, sticky=W, padx=10, pady=5)
+deger_kaybi_entry.grid(row=18, column=4, sticky=W, padx=10, pady=5)
+
 # İnceleme Süresi
 Label(root, text="İnceleme Süresi:").grid(row=10, column=0, sticky=W, padx=10, pady=5)
 intikal_sureci = StringVar()
@@ -142,18 +130,8 @@ for idx, option in enumerate(hukum_secenekleri):
         row=17 + idx, column=0, sticky=W, padx=10, pady=5
     )
 
-# Değer kaybı ve vekalet ücreti için input alanları
-deger_kaybi_label = Label(root, text="Değer Kaybı (TL):")
-deger_kaybi_entry = Entry(root)
-vekalet_ucreti_label = Label(root, text="Vekalet Ücreti (TL):")
-vekalet_ucreti_entry = Entry(root)
-
-
 # Gönder butonu
-Button(root, text='Gönder', command=bilirkisi_raporu).grid(row=25, column=0, padx=10, pady=10)
-
-# Hüküm seçildiğinde fonksiyonu bağlama
-hukum.trace_add("write", hukum_secildi)
+Button(root, text='Gönder', command=bilirkisi_raporu).grid(row=26, column=0, padx=10, pady=10)
 
 # Pencereyi aç
 root.mainloop()

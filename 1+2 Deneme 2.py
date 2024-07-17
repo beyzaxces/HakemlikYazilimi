@@ -5,8 +5,9 @@ import os
 
 def bilirkisi_raporu():
     doc = Document()
-    doc.add_heading('Bilirkişi Raporu', level=1)
-    doc.add_paragraph(f"Uyuşmazlık Konusu: {uyusmazlik_konusu.get()}\n")
+    doc.add_heading('BİLİRKİŞİ RAPORU', level=1)
+    doc.add_heading('1. BAŞVURUYA KONU UYUŞMAZLIK VE İTİRAZ HAKEM HEYETİNE İNTİKALİ ', level=2)
+    doc.add_heading(f"1.1 Uyuşmazlık Konusu: {uyusmazlik_konusu.get()}\n", level=3)
 
     if uyusmazlik_konusu.get() == "Trafik DK":
         doc.add_paragraph(f"Sigortalı araç plakası: {sigortali_plaka_entry.get()}")
@@ -19,7 +20,7 @@ def bilirkisi_raporu():
                           f"araçta oluşan değer kaybı tutarının tazmini amacıyla Komisyona yapılan başvuruda "
                           f"Uyuşmazlık Hakemince verilen Karara davalı sigorta kuruluşunun itirazlarına ilişkindir.")
 
-    doc.add_paragraph(f"\n\nİnceleme süresi: {intikal_sureci.get()}\n")
+    doc.add_heading(f"\n1.2 İnceleme süresi: {intikal_sureci.get()}\n", level=3)
 
     if intikal_sureci.get() == "Doğrudan hüküm":
         doc.add_paragraph("\nUyuşmazlık Hakemi Kararına davalı sigorta kuruluşu vekilinin itirazları Komisyon nezdinde "
@@ -31,8 +32,8 @@ def bilirkisi_raporu():
                           "kurulması yoluna gidilmiştir.\n\nHeyetimizce davalı vekilinin itirazlarına ilişkin olarak "
                           "karara varılmış ve yargılamaya son verilmiştir.")
 
-    doc.add_heading('SİGORTA HAKEMİ VEYA HAKEM HEYETİNCE VERİLEN HÜKÜM', level=1)
-    doc.add_paragraph(f"Uyuşmazlık Hakemi tarafından verilen hüküm: {hukum.get()}")
+    doc.add_heading('2. SİGORTA HAKEMİ VEYA HAKEM HEYETİNCE VERİLEN HÜKÜM', level=2)
+    doc.add_heading(f"Uyuşmazlık Hakemi tarafından verilen hüküm: {hukum.get()}", level=3)
 
     if hukum.get() == "Başvurunun kabulü":
         if not deger_kaybi_entry.get().strip() or not vekalet_ucreti_entry.get().strip():
@@ -50,44 +51,17 @@ def bilirkisi_raporu():
         doc.add_paragraph(karar_metni)
 
     # Word dosyasını kaydet
-    dosya_yolu = os.path.join("C:\\Users\\Beyza\\Desktop", "BilirkisiDeneme_Raporu.docx")
+    dosya_yolu = os.path.join("C:\\Users\\Beyza\\Desktop", "Bilirkisi_Raporu.docx")
     doc.save(dosya_yolu)
 
     # Bilgilendirme mesajı
     messagebox.showinfo("İşlem Tamamlandı", f"Bilirkişi raporu oluşturuldu: {dosya_yolu}")
 
-def uyusmazlik_goster():
-    # Uyuşmazlık Konusu seçildiğinde ilgili inputları göster veya gizle
-    if uyusmazlik_konusu.get() == "Trafik DK":
-        sigortali_plaka_label.grid()
-        sigortali_plaka_entry.grid()
-        basvuran_plaka_label.grid()
-        basvuran_plaka_entry.grid()
-        kaza_tarihi_label.grid()
-        kaza_tarihi_entry.grid()
-    else:
-        sigortali_plaka_label.grid_remove()
-        sigortali_plaka_entry.grid_remove()
-        basvuran_plaka_label.grid_remove()
-        basvuran_plaka_entry.grid_remove()
-        kaza_tarihi_label.grid_remove()
-        kaza_tarihi_entry.grid_remove()
-
-def hukum_secildi(*args):
-    if hukum.get() == "Başvurunun kabulü":
-        deger_kaybi_label.grid(row=19, column=0, sticky=W, padx=10, pady=5)
-        deger_kaybi_entry.grid(row=19, column=1, padx=10, pady=5)
-        vekalet_ucreti_label.grid(row=20, column=0, sticky=W, padx=10, pady=5)
-        vekalet_ucreti_entry.grid(row=20, column=1, padx=10, pady=5)
-    else:
-        deger_kaybi_label.grid_remove()
-        deger_kaybi_entry.grid_remove()
-        vekalet_ucreti_label.grid_remove()
-        vekalet_ucreti_entry.grid_remove()
 
 # Ana pencereyi oluştur
 root = Tk()
-root.title("Bilirkişi Raporu ve Sigorta Hakemi veya Hakem Heyeti Hükmü")
+root.title("Bilirkişi Raporu")
+root.geometry("700x800")
 
 # Uyuşmazlık Konusu
 uyusmazlik_konusu = StringVar()
@@ -98,43 +72,61 @@ uyusmazlik_secenekleri = [
     "Trafik SİGT", "Trafik DYKT", "İMM", "Zorunlu Deprem", "Diğer"
 ]
 for idx, option in enumerate(uyusmazlik_secenekleri):
-    Radiobutton(root, text=option, variable=uyusmazlik_konusu, value=option, command=uyusmazlik_goster).grid(
+    Radiobutton(root, text=option, variable=uyusmazlik_konusu, value=option).grid(
         row=idx + 1, column=0, sticky=W, padx=10, pady=5)
 
 # Trafik DK seçeneği için input alanları
 sigortali_plaka_label = Label(root, text="Sigortalı araç plakası:")
 sigortali_plaka_entry = Entry(root)
-sigortali_plaka_label.grid(row=10, column=0, sticky=W, padx=10, pady=5)
-sigortali_plaka_entry.grid(row=10, column=1, padx=10, pady=5)
+sigortali_plaka_label.grid(row=1, column=3, sticky=W, padx=10, pady=5)
+sigortali_plaka_entry.grid(row=1, column=4, padx=10, pady=5)
 
 basvuran_plaka_label = Label(root, text="Başvurucuya ait araç plakası:")
 basvuran_plaka_entry = Entry(root)
-basvuran_plaka_label.grid(row=11, column=0, sticky=W, padx=10, pady=5)
-basvuran_plaka_entry.grid(row=11, column=1, padx=10, pady=5)
+basvuran_plaka_label.grid(row=2, column=3, sticky=W, padx=10, pady=5)
+basvuran_plaka_entry.grid(row=2, column=4, padx=10, pady=5)
 
 kaza_tarihi_label = Label(root, text="Kaza tarihi (DD/MM/YYYY):")
 kaza_tarihi_entry = Entry(root)
-kaza_tarihi_label.grid(row=12, column=0, sticky=W, padx=10, pady=5)
-kaza_tarihi_entry.grid(row=12, column=1, padx=10, pady=5)
+kaza_tarihi_label.grid(row=3, column=3, sticky=W, padx=10, pady=5)
+kaza_tarihi_entry.grid(row=3, column=4, padx=10, pady=5)
+
+# İnceleme Süresi
+Label(root, text="İnceleme Süresi:").grid(row=10, column=0, sticky=W, padx=10, pady=5)
+intikal_sureci = StringVar()
+intikal_sureci.set("Doğrudan hüküm")
+intikal_secenekleri = ["Doğrudan hüküm", "Taraflardan belge isteme sonrası hüküm", "Bilirkişi tayini sonrası hüküm",
+                       "Yeni Rapor istenilmesi sonrası hüküm", "Yeni Rapor istenilmesi ve BK tayini sonrası hüküm"]
+intikal_sureci_radiobuttons = [Radiobutton(root, text=option, variable=intikal_sureci, value=option) for option in
+                               intikal_secenekleri]
+for idx, option in enumerate(intikal_secenekleri):
+    intikal_sureci_radiobuttons[idx].grid(row=11 + idx, column=0, sticky=W)
 
 # Uyuşmazlık Hakemi tarafından verilen hüküm
-Label(root, text="Uyuşmazlık Hakemi tarafından verilen hüküm:").grid(row=13, column=0, sticky=W, padx=10, pady=5)
+Label(root, text="Uyuşmazlık Hakemi tarafından verilen hüküm:").grid(row=16, column=0, sticky=W, padx=10, pady=5)
 hukum = StringVar()
 hukum.set("Başvurunun kabulü")
-for idx, option in enumerate(["Başvurunun kabulü", "Başvurunun kısmen kabulü", "Başvurunun reddi", "Başvurunun usulden reddi"]):
-    Radiobutton(root, text=option, variable=hukum, value=option).grid(row=14 + idx, column=0, sticky=W, padx=10, pady=5)
+hukum_secenekleri = [
+    "Başvurunun kabulü", "Başvurunun kısmen kabulü",
+    "Başvurunun reddi", "Başvurunun usulden reddi"
+]
+for idx, option in enumerate(hukum_secenekleri):
+    Radiobutton(root, text=option, variable=hukum, value=option).grid(row=17 + idx, column=0, sticky=W, padx=10, pady=5)
 
 # Değer kaybı ve vekalet ücreti için input alanları
 deger_kaybi_label = Label(root, text="Değer Kaybı (TL):")
 deger_kaybi_entry = Entry(root)
 vekalet_ucreti_label = Label(root, text="Vekalet Ücreti (TL):")
 vekalet_ucreti_entry = Entry(root)
+vekalet_ucreti_label.grid(row=17, column=3, sticky=W, padx=10, pady=5)
+vekalet_ucreti_entry.grid(row=17, column=4, padx=10, pady=5)
+deger_kaybi_label.grid(row=18, column=3, sticky=W, padx=10, pady=5)
+deger_kaybi_entry.grid(row=18, column=4, sticky=W, padx=10, pady=5)
+
+
 
 # Gönder butonu
-Button(root, text='Gönder', command=bilirkisi_raporu).grid(row=21, column=0, padx=10, pady=10)
-
-# Hüküm seçildiğinde fonksiyonu bağlama
-hukum.trace_add("write", hukum_secildi)
+Button(root, text='Gönder', command=bilirkisi_raporu).grid(row=26, column=0, padx=10, pady=10)
 
 # Pencereyi aç
 root.mainloop()
